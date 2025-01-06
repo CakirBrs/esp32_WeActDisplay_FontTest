@@ -33,7 +33,7 @@ void app_main(void)
     //draw_word(" `_;\".$!'", 10, 60);
     draw_word_withFont("Baris Cakir", 10, 40, &FreeSansBold12pt7b);
     draw_word_withFont("Baris Cakir", 10, 60, &FreeMono9pt7b2);
-    ////draw_word_withFont("Baris Cakir", 10, 50, &FreeSerif9pt7b);
+    draw_word_withFont("Baris Cakir", 10, 75, &FreeSerif9pt7b);
     draw_word_withFont("Baris Cakir", 10, 100, &FreeMono12pt7b);
     
     
@@ -41,7 +41,8 @@ void app_main(void)
 
     //draw_line_horizontal(10, 100);
     //draw_line_vertical(10, 100);
-    epaper_clear();
+    epaper_writeBufferToDisplay();
+    epaper_update();
 
     epaper_deep_sleep();
 

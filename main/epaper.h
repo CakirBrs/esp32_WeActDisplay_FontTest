@@ -24,6 +24,7 @@
 #define DISPLAY_HEIGHT  122
 
 void epaper_init(void);
+void epaper_writeBufferToDisplay(void);
 void epaper_update(void);
 void epaper_clear(void);
 void epaper_deep_sleep(void);

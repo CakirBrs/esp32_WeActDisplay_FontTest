@@ -150,6 +150,8 @@ void epaper_update(void){
     ESP_LOGI(TAG, "Epaper Display Updated");
 }
 void epaper_clear(void){
+    memset(bw_buf, 0xFF, bw_bufsize);
+    memset(red_buf, 0x00, red_bufsize);
     
     spi_cmd(0x4E); // set RAM x address count to 0;
     spi_data(0x00);
@@ -176,6 +178,35 @@ void epaper_clear(void){
     epaper_update();
     
 }
+
+
+void epaper_writeBufferToDisplay(void){
+    
+    spi_cmd(0x4E); // set RAM x address count to 0;
+    spi_data(0x00);
+    spi_cmd(0x4F); // set RAM y address count to 0X199;
+    spi_data(0xF9);
+    spi_data(0x00);
+    wait_busy();
+
+
+    spi_cmd(0x24); //write RAM for black(0)/white (1)
+
+    for (uint16_t i = 0; i < bw_bufsize; i++)
+    {
+        spi_data(bw_buf[i]);
+    }
+
+    spi_cmd(0x26); //write RAM for red(1)/white (0)
+
+    for (uint16_t i = 0; i < red_bufsize; i++)
+    {
+        spi_data(red_buf[i]);
+    }
+    
+}
+
+
 void epaper_deep_sleep(void){
     spi_cmd(0x10);
     spi_data(0x01); // Deep sleep mode 1
