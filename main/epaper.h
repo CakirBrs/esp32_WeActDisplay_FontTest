@@ -23,6 +23,11 @@
 #define DISPLAY_WIDTH   250
 #define DISPLAY_HEIGHT  122
 
+//Color Definitions
+#define BLACK 0
+#define RED 1
+
+// Function Prototypes
 void epaper_init(void);
 void epaper_writeBufferToDisplay(void);
 void epaper_update(void);
@@ -50,6 +55,7 @@ void draw_Char3(int letter, int x, int y);
 
 void draw_char_withFont(uint8_t letter, int x, int y, const GFXfont *font);
 void draw_word_withFont(const char* word, int x, int y, const GFXfont *font);
+void draw_word_withFont_color(const char* word, int x, int y, const GFXfont *font, uint8_t color);
 
 void draw_word(const char* word, int x, int y);
 

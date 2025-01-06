@@ -565,6 +565,26 @@ void testFont(int w, int h, uint8_t pixel, int x, int y){
     }
 }
 
+void testFont_color(int w, int h, uint8_t pixel, int x, int y, int color){
+    // Buffer'daki ilgili byte ve bit pozisyonu
+    int buffer_col = x + w; // Buffer'da sütun
+    int buffer_row = ( y + h ) / 8; // Buffer'da byte satırı
+    int buffer_bit = ( y + h ) % 8; // Buffer'da bit pozisyonu
+    uint8_t *buffer_byte = NULL;
+    if(color == BLACK){
+        buffer_byte = &bw_buf[(buffer_col * (DISPLAY_HEIGHT / 8+1)) + buffer_row];
+    }
+    else if(color == RED){
+        buffer_byte = &red_buf[(buffer_col * (DISPLAY_HEIGHT / 8+1)) + buffer_row];
+    }
+    if (((!pixel) && (color == BLACK)) || ((pixel) && (color == RED))) {
+        *buffer_byte |= (1 << (7-buffer_bit)); // Bit'i 1 yap
+    } 
+    else if(((pixel) && (color ==BLACK) )|| ((!pixel) && (color == RED))){
+        *buffer_byte &= ~(1 << (7-buffer_bit)); // Bit'i 0 yap
+    }
+}
+
 
 void draw_line_horizontal(int x1, int x2){
     for(int i = x1; i < x2; i++){
@@ -601,6 +621,35 @@ void printBinary2(unsigned char value, int length, int height, int x, int y){
             hC++;
         }
         testFont(wC, hC, (value >> i) & 1, x, y);
+        wC++;
+
+        
+        if((value >> i) & 1){
+            printf("█ ");
+        }else{
+            printf("  ");
+        }
+        counter2++;
+        if(counter2==length){
+            printf("\n");
+            counterHeight2++;
+            counter2 = 0;
+        }
+    }
+}
+
+
+void printBinary2_color(unsigned char value, int length, int height, int x, int y, int color){
+    for (int i = 7; i >= 0; i--) {
+        if(counterHeight2==height){
+            continue;
+        }
+        
+        if(wC==length){
+            wC = 0;
+            hC++;
+        }
+        testFont_color(wC, hC, (value >> i) & 1, x, y, color);
         wC++;
 
         
@@ -754,6 +803,32 @@ void draw_char_withFont(uint8_t letter, int x, int y, const GFXfont *font){
 }
 
 
+void draw_char_withFont_color(uint8_t letter, int x, int y, const GFXfont *font, uint8_t color){
+    int widthOfLetter = font->glyph[letter - font->first].width;
+    int heightOfLetter = font->glyph[letter - font->first].height;
+
+    ESP_LOGI(TAG, "Char %c: \nBitmapOffset: %d \nWidth: %d \nHeight: %d \nxAdvance: %d \nxOffset: %d \nyOffset: %d \nyAdvance: %d \nFirstByte: %.4x", 
+             letter,
+             font->glyph[letter - font->first].bitmapOffset,
+             widthOfLetter,
+             heightOfLetter,
+             font->glyph[letter - font->first].xAdvance,
+             font->glyph[letter - font->first].xOffset,
+             font->glyph[letter - font->first].yOffset,
+             font->yAdvance,
+             font->bitmap[font->glyph[letter - font->first].bitmapOffset]);
+
+    for(int i = 0; i < (widthOfLetter * heightOfLetter / 8 + 1); i++) {
+        printBinary2_color(font->bitmap[font->glyph[letter - font->first].bitmapOffset + i], widthOfLetter, heightOfLetter, x, y, color);
+    }
+    counter2 = 0;
+    counterHeight2 = 0;
+    counterByte2 = 0;
+    wC = 0;
+    hC = 0;
+}
+
+
 void draw_word(const char* word, int x, int y){
     uint8_t letter = word[0];
     uint8_t spaceOfLetter = FreeMono9pt7bGlyphs[letter - FreeMono9pt7b.first].xAdvance;
@@ -775,6 +850,24 @@ void draw_word_withFont(const char* word, int x, int y, const GFXfont *font){
     for(int i = 0; i < strlen(word); i++){
         int yYeni = y + font->glyph[word[i] - font->first].yOffset;
         draw_char_withFont(word[i], x, yYeni, font);
+        x += font->glyph[word[i] - font->first].xAdvance;
+        ESP_LOGI(TAG, "Harf: %c Y ekseni: %d Satır Yüksekliği: %d Y Offseti: %d Harf Yüksekliği: %d yYeni: %d",
+                        word[i],
+                                        y,
+                                                    font->yAdvance,
+                                                                    font->glyph[word[i] - font->first].yOffset,
+                                                                                        font->glyph[word[i] - font->first].height,
+                                                                                                        yYeni);    
+    }
+}
+
+void draw_word_withFont_color(const char* word, int x, int y, const GFXfont *font, uint8_t color){  //to do : continue from here
+    uint8_t letter = word[0];
+    ESP_LOGI(TAG, "Word: %s", word);
+    
+    for(int i = 0; i < strlen(word); i++){
+        int yYeni = y + font->glyph[word[i] - font->first].yOffset;
+        draw_char_withFont_color(word[i], x, yYeni, font, color);
         x += font->glyph[word[i] - font->first].xAdvance;
         ESP_LOGI(TAG, "Harf: %c Y ekseni: %d Satır Yüksekliği: %d Y Offseti: %d Harf Yüksekliği: %d yYeni: %d",
                         word[i],

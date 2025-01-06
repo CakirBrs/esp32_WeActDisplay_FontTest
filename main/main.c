@@ -12,7 +12,8 @@
 #include "FreeMono9pt7b2.h"
 #include "FreeSansBold12pt7b.h"
 
-////#include "robotobold12pt7b.h"
+#include "Picopixel.h"
+//#include "Robotobold12pt7b.h"
 
 static const char *TAG = "DFont";
 
@@ -31,10 +32,13 @@ void app_main(void)
     ////draw_word("Baris Cakir", 10, 10);
     //draw_word("34; Deggree Celcius;; ", 10, 40);
     //draw_word(" `_;\".$!'", 10, 60);
+    //////draw_word_withFont("Baris Cakir", 10, 10, &Robotobold12pt7b); ///linker hatası bunu epaper.c den sil sonra kullan
+    draw_word_withFont_color("Baris Cakir", 10, 15, &FreeMono9pt7b2, RED);
     draw_word_withFont("Baris Cakir", 10, 40, &FreeSansBold12pt7b);
     draw_word_withFont("Baris Cakir", 10, 60, &FreeMono9pt7b2);
     draw_word_withFont("Baris Cakir", 10, 75, &FreeSerif9pt7b);
     draw_word_withFont("Baris Cakir", 10, 100, &FreeMono12pt7b);
+    draw_word_withFont("Baris Cakir", 10, 115, &Picopixel);
     
     
     /////draw_word_withFont("Baris Cakir", 10, 20, &Robotobold12pt7b);
