@@ -28,14 +28,14 @@ void app_main(void)
     //draw_Char3(letter, 40, 100);
     //draw_char_withFont(letter, 70, 100, &FreeSerif9pt7b);
     //draw_word("HELLO my name is Baris", 10, 10);
-    draw_word("Baris Cakir", 10, 10);
+    ////draw_word("Baris Cakir", 10, 10);
     //draw_word("34; Deggree Celcius;; ", 10, 40);
     //draw_word(" `_;\".$!'", 10, 60);
-
+    draw_word_withFont("Baris Cakir", 10, 40, &FreeSansBold12pt7b);
     draw_word_withFont("Baris Cakir", 10, 60, &FreeMono9pt7b2);
     ////draw_word_withFont("Baris Cakir", 10, 50, &FreeSerif9pt7b);
     draw_word_withFont("Baris Cakir", 10, 100, &FreeMono12pt7b);
-    draw_word_withFont("Baris Cakir", 10, 40, &FreeSansBold12pt7b);
+    
     
     /////draw_word_withFont("Baris Cakir", 10, 20, &Robotobold12pt7b);
 

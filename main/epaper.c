@@ -742,8 +742,8 @@ void draw_word_withFont(const char* word, int x, int y, const GFXfont *font){
     ESP_LOGI(TAG, "Word: %s", word);
     
     for(int i = 0; i < strlen(word); i++){
-        int yYeni = y + (font->glyph[word[i] - font->first].yOffset);
-        draw_Char(word[i], x, yYeni);
+        int yYeni = y + font->glyph[word[i] - font->first].yOffset;
+        draw_char_withFont(word[i], x, yYeni, font);
         x += font->glyph[word[i] - font->first].xAdvance;
         ESP_LOGI(TAG, "Harf: %c Y ekseni: %d Satır Yüksekliği: %d Y Offseti: %d Harf Yüksekliği: %d yYeni: %d",
                         word[i],
